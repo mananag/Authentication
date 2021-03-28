@@ -1,24 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import {ApolloProvider, ApolloClient, InMemoryCache, createHttpLink} from "@apollo/client";
+import {HashRouter , Route, Switch} from "react-router-dom";
+import Header from "./components/Header";
+import Login from "./components/Login";
+import SignUp from "./components/SignUp";
+import requireAuth from "./components/requireAuth";
+
+
+const link = createHttpLink({
+    uri: 'http://localhost:4000/graphql',
+    credentials: 'include'
+});
+const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link
+})
+
+const Dashboard = () => {
+    return(
+        <div>
+            You are logged in!!
+        </div>
+    )
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <ApolloProvider client = {client}>
+          <HashRouter>
+
+              <Route path={'/'}>
+                  <Header />
+              </Route>
+              <Switch>
+                  <Route exact path={'/dashboard'}>
+                      {requireAuth(Dashboard)}
+                  </Route>
+                  <Route path={"/login"}>
+                      <Login />
+                  </Route>
+                  <Route path={"/signup"}>
+                      <SignUp />
+                  </Route>
+              </Switch>
+          </HashRouter>
+      </ApolloProvider>
   );
 }
 
