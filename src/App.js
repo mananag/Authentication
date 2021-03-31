@@ -7,7 +7,7 @@ import requireAuth from "./components/requireAuth";
 
 
 const link = createHttpLink({
-    uri: 'http://localhost:4000/graphql',
+    uri: 'https://qraphql-authentication.herokuapp.com/graphql',
     credentials: 'include'
 });
 const client = new ApolloClient({
